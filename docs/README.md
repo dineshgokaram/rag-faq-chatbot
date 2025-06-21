@@ -2,9 +2,8 @@
 
 ## 📚 Overview
 
-This project is a **Retrieval-Augmented Generation (RAG)** powered FAQ chatbot built for **Altibbe Health Pvt Ltd** as part of the Generative AI Developer Intern screening task.
+This project is a Retrieval-Augmented Generation (RAG) FAQ chatbot designed to provide accurate, sourced answers to user questions by combining semantic search with large language models (LLMs). The system retrieves relevant information from a knowledge base of embedded documents and generates natural responses, ensuring transparency and source attribution.
 
-It retrieves relevant FAQ content from embedded document chunks using **semantic search** and responds via a **modular, transparent n8n workflow**.
 
 ---
 
