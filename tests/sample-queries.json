@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What are your clinic timings?",
+    "expected_keywords": ["9 AM to 6 PM", "Monday to Saturday"],
+    "notes": "Should retrieve operational hours from faq.md"
+  },
+  {
+    "question": "Do you offer online consultations?",
+    "expected_keywords": ["telemedicine", "consultations", "platform"],
+    "notes": "Should mention online consultations availability"
+  },
+  {
+    "question": "How can I book an appointment?",
+    "expected_keywords": ["website", "helpline"],
+    "notes": "Should reference website or phone helpline"
+  },
+  {
+    "question": "Is emergency care available?",
+    "expected_keywords": [],
+    "notes": "Not covered in FAQ; should return low or no matches"
+  }
+]

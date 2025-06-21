@@ -1,0 +1,102 @@
+{
+  "name": "RAG FAQ Chatbot Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "faq-query",
+        "responseMode": "onReceived"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const question = $json[\"question\"] || \"\";\nif (question.trim() === \"\") {\n  throw new Error(\"Empty or invalid question\");\n}\nreturn [{ json: { cleanedQuestion: question.trim() } }];"
+      },
+      "name": "Preprocess Question",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "headerAuth",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\n  \"input\": \"={{$json[\"cleanedQuestion\"]}}\",\n  \"model\": \"text-embedding-ada-002\"\n}"
+      },
+      "name": "Generate Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://your-vector-db-url/query", 
+        "authentication": "headerAuth",
+        "jsonParameters": true,
+        "bodyParametersJson": "{\n  \"vector\": {{ $json[\"data\"][\"embedding\"] }},\n  \"top_k\": 3\n}"
+      },
+      "name": "Semantic Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const results = $json[\"results\"];\nlet context = \"Context:\\n\";\nresults.forEach((r, i) => {\n  context += `${i+1}. ${r.chunk} (source: ${r.source})\\n`;\n});\nreturn [{ json: { context, cleanedQuestion: $json[\"cleanedQuestion\"] } }];"
+      },
+      "name": "Format Context",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "headerAuth",
+        "jsonParameters": true,
+        "bodyParametersJson": "{\n  \"model\": \"gpt-4o\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an ethical, helpful AI assistant.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Context:\\n{{$json.context}}\\n\\nUser Question:\\n{{$json.cleanedQuestion}}\"\n    }\n  ]\n}"
+      },
+      "name": "Generate Answer (LLM)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { answer: $json.choices[0].message.content } }];"
+      },
+      "name": "Format Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Preprocess Question", "type": "main", "index": 0 }]]
+    },
+    "Preprocess Question": {
+      "main": [[{ "node": "Generate Embedding", "type": "main", "index": 0 }]]
+    },
+    "Generate Embedding": {
+      "main": [[{ "node": "Semantic Search", "type": "main", "index": 0 }]]
+    },
+    "Semantic Search": {
+      "main": [[{ "node": "Format Context", "type": "main", "index": 0 }]]
+    },
+    "Format Context": {
+      "main": [[{ "node": "Generate Answer (LLM)", "type": "main", "index": 0 }]]
+    },
+    "Generate Answer (LLM)": {
+      "main": [[{ "node": "Format Response", "type": "main", "index": 0 }]]
+    }
+  }
+}

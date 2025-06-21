@@ -1,0 +1,108 @@
+# RAG-powered FAQ Chatbot
+
+## 📚 Overview
+
+This project is a **Retrieval-Augmented Generation (RAG)** powered FAQ chatbot built for **Altibbe Health Pvt Ltd** as part of the Generative AI Developer Intern screening task.
+
+It retrieves relevant FAQ content from embedded document chunks using **semantic search** and responds via a **modular, transparent n8n workflow**.
+
+---
+
+## ⚙️ Features
+
+* ✅ **Semantic Search** with **Chroma Vector DB**
+* ✅ **Embeddings** via **SentenceTransformers** (local, no API costs)
+* ✅ **Workflow Orchestration** using **n8n**
+* ✅ **Web API Integration** with **Flask**
+* ✅ **Ethical Design:** Transparent retrieval, source attribution
+
+---
+
+## 🏗️ Project Structure
+
+```
+rag-chatbot-project/
+├── workflows/                  # n8n workflow JSON
+├── scripts/                    # Vector DB setup and search scripts
+├── data/sample-documents/      # Input FAQ files (txt/md)
+├── chroma_db/                  # Local Chroma DB files
+├── tests/                      # Example test queries
+├── docs/                       # README and technical approach
+└── .env.example                # Example environment variables
+```
+
+---
+
+## 🚀 Setup Instructions
+
+1️⃣ **Clone the repository**
+
+```bash
+git clone <your-repo-url>
+cd rag-chatbot-project
+```
+
+2️⃣ **Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+3️⃣ **Environment Setup**
+
+* Create `.env` based on `.env.example`
+* Example:
+
+```ini
+EMBEDDING_MODEL=all-MiniLM-L6-v2
+CHROMA_DB_DIR=./chroma_db
+```
+
+4️⃣ **Run the Flask API (retrieval service)**
+
+```bash
+python scripts/search_and_generate.py
+```
+
+5️⃣ **Start n8n**
+
+```bash
+n8n start
+```
+
+→ Import the provided workflow file (`workflows/rag-chatbot-workflow.json`) in the n8n UI.
+
+6️⃣ **Test via Postman**
+
+```http
+POST https://<your-n8n-instance>/webhook/faq-query
+Body (JSON): { "question": "Do you offer online consultations?" }
+```
+
+---
+
+## 🧪 Testing
+
+Example test queries are available in:
+
+```
+tests/sample-queries.json
+```
+
+---
+
+## 💡 Future Improvements
+
+* ✅ Multi-modal support (PDF, images)
+* ✅ LLM integration (OpenAI, Anthropic, or OSS models)
+* ✅ Real-time indexing of new documents
+* ✅ Caching for repeated queries
+* ✅ Analytics Dashboard
+
+---
+
+## 📩 Contact
+
+For queries or support, reach out via:
+**Email:** [people@gmail.com](mailto:people@gmail.com)
+**Phone:** +91- 1234567890
