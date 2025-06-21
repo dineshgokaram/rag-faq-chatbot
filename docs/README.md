@@ -100,4 +100,7 @@ tests/sample-queries.json
 
 ---
 
+##Screenshots
+![image](https://github.com/user-attachments/assets/c4f6bcaf-311f-49b6-8bfa-7b40bba7cd64)
+
 
