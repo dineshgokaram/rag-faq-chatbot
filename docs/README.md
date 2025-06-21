@@ -100,8 +100,4 @@ tests/sample-queries.json
 
 ---
 
-## 📩 Contact
 
-For queries or support, reach out via:
-**Email:** [people@gmail.com](mailto:people@gmail.com)
-**Phone:** +91- 1234567890
